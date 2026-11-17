@@ -8,6 +8,8 @@ export interface TranslatorConfiguration {
   missingKeyCallback?: MissingTranslationKeyCallback;
 }
 
+type TransFunction = (value: any, params?: {}) => string;
+
 export default function install(_vue: VueConstructor, config: TranslatorConfiguration) {
   if (!config || !config.messages) {
     throw new Error('Missing the required configuration object! Supply it when enabling this plugin!');
@@ -15,23 +17,32 @@ export default function install(_vue: VueConstructor, config: TranslatorConfigur
 
   const translator = new Translator(config.messages, config.missingKeyCallback);
 
-  defineProperty(_vue.prototype, '$translator', {
-    get(): Translator {
-      return translator;
-    },
-  });
-
-  _vue.filter('trans', (value: any, params?: {}) => {
+  const transFunction: TransFunction = (value, params?) => {
     if (!value) {
       return '';
     }
 
     return translator.trans(value, params);
+  };
+
+  defineProperty(_vue.prototype, '$translator', {
+    get() {
+      return translator;
+    },
   });
+
+  defineProperty(_vue.prototype, '$t', {
+    get() {
+      return transFunction;
+    },
+  });
+
+  _vue.filter('trans', transFunction);
 }
 
 declare module 'vue/types/vue' {
   interface Vue {
     readonly $translator: Translator;
+    readonly $t: TransFunction;
   }
 }

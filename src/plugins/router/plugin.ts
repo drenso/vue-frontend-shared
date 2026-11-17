@@ -2,6 +2,8 @@ import {VueConstructor} from 'vue/types/vue';
 import {RouterConfiguration, RouterInterface} from './router_types';
 import defineProperty = Reflect.defineProperty;
 
+type PathFunction = (value: string, params?: {}) => string;
+
 export default function install(_vue: VueConstructor, config: RouterConfiguration) {
   if (!config) {
     throw new Error('Missing the required configuration object! Supply it when enabling this plugin!');
@@ -15,24 +17,33 @@ export default function install(_vue: VueConstructor, config: RouterConfiguratio
 
   config.router.setRoutingData(config.routes);
 
+  const pathFunction: PathFunction = (value, params) => {
+    if (!value) {
+      return '';
+    }
+
+    return config.router.generate(value, params);
+  };
+
   defineProperty(_vue.prototype, '$sfRouter', {
     get(): RouterInterface {
       return config.router;
     },
   });
 
-  _vue.filter('path', (value: any, params?: {}) => {
-    if (!value) {
-      return '';
-    }
-
-    return config.router.generate(value, params);
+  defineProperty(_vue.prototype, '$sfPath', {
+    get(): PathFunction {
+      return pathFunction;
+    },
   });
+
+  _vue.filter('path', pathFunction);
 }
 
 declare module 'vue/types/vue' {
   interface Vue {
     readonly $sfRouter: RouterInterface;
+    readonly $sfPath: PathFunction;
   }
 }
 

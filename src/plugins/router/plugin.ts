@@ -31,7 +31,7 @@ export default function install(_vue: VueConstructor, config: RouterConfiguratio
     },
   });
 
-  if (config.registerGlobal) {
+  if (config.registerGlobal === true) {
     defineProperty(_vue.prototype, '$sfPath', {
       get(): PathFunction {
         return pathFunction;
@@ -39,7 +39,7 @@ export default function install(_vue: VueConstructor, config: RouterConfiguratio
     });
   }
 
-  if (config.registerFilter ?? true) {
+  if (config.registerFilter !== false) {
     _vue.filter('path', pathFunction);
   }
 }

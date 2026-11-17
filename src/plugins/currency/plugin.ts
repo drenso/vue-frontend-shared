@@ -14,7 +14,7 @@ export default function install(_vue: VueConstructor, options: CurrencyOptions) 
   const currencyFunction: CurrencyFunction = (value) => parseCurrency(value, formatter);
   const currency5Function: CurrencyFunction = (value) => parseCurrency(value, formatter5);
 
-  if (options?.registerGlobal) {
+  if (options && options.registerGlobal === true) {
     defineProperty(_vue.prototype, '$currency', {
       get() {
         return currencyFunction;
@@ -28,7 +28,7 @@ export default function install(_vue: VueConstructor, options: CurrencyOptions) 
     });
   }
 
-  if (options?.registerFilter ?? true) {
+  if (!options || options.registerFilter !== false) {
     _vue.filter('currency', currencyFunction);
     _vue.filter('currency5', currency5Function);
   }

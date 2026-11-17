@@ -33,7 +33,7 @@ export default function install(_vue: VueConstructor, config: TranslatorConfigur
     },
   });
 
-  if (config.registerGlobal) {
+  if (config.registerGlobal === true) {
     defineProperty(_vue.prototype, '$t', {
       get() {
         return transFunction;
@@ -41,7 +41,7 @@ export default function install(_vue: VueConstructor, config: TranslatorConfigur
     });
   }
 
-  if (config.registerFilter ?? true) {
+  if (config.registerFilter !== false) {
     _vue.filter('trans', transFunction);
   }
 }

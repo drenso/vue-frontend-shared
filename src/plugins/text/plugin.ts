@@ -8,7 +8,7 @@ export interface TextOptions {
 }
 
 export default function install(_vue: VueConstructor, options?: TextOptions) {
-  if (options?.registerGlobal) {
+  if (options && options.registerGlobal === true) {
     defineProperty(_vue.prototype, '$lowercase', {
       get() {
         return toLowercase;
@@ -34,7 +34,7 @@ export default function install(_vue: VueConstructor, options?: TextOptions) {
     });
   }
 
-  if (options?.registerFilter ?? true) {
+  if (!options || options.registerFilter !== false) {
     _vue.filter('lowercase', toLowercase);
     _vue.filter('uppercase', toUppercase);
     _vue.filter('capitalize', capitalize);

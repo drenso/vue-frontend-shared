@@ -43,7 +43,7 @@ export default function install(_vue: VueConstructor, options?: MomentOptions) {
   const momentTime = momentFilter('HH:mm');
   const momentTimeWithSeconds = momentFilter('HH:mm:ss');
 
-  if (options?.registerGlobal) {
+  if (options && options.registerGlobal === true) {
     defineProperty(_vue.prototype, '$momentDatetime', {
       get() {
         return momentDatetime;
@@ -75,7 +75,7 @@ export default function install(_vue: VueConstructor, options?: MomentOptions) {
     });
   }
 
-  if (options?.registerFilter ?? true) {
+  if (!options || options.registerFilter !== false) {
     _vue.filter('moment_datetime', momentDatetime);
     _vue.filter('moment_datetime_with_seconds', momentDatetimeWithSeconds);
     _vue.filter('moment_date', momentDate);

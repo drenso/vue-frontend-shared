@@ -27,6 +27,8 @@ jobs:
           registry-url: https://npm.drenso.dev
       - name: Install dependencies
         run: npm ci
+      - name: Set version
+        run: npm version --no-git-tag-version ${{ github.ref_name }}
       - name: Publish
         run: npm publish --registry=https://registry.npmjs.org --provenance --access public
         env:

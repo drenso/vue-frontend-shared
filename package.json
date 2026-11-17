@@ -2,6 +2,10 @@
   "name": "@drenso/vue-frontend-shared",
   "description": "Shared code that can be used over our Vue frontend implementations",
   "author": "Drenso <hallo@drenso.nl>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drenso/vue-frontend-shared.git"
+  },
   "contributors": [
     "Bob van de Vijver <bob@drenso.nl>",
     "Tobias Feijten <tobias@drenso.nl>"

@@ -7,6 +7,8 @@ import defineProperty = Reflect.defineProperty;
 
 export interface MomentOptions {
   default_tz?: string;
+  registerGlobal?: boolean;
+  registerFilter?: boolean;
 }
 
 type MomentFunction = (value: any, format?: string) => string;
@@ -36,44 +38,50 @@ export default function install(_vue: VueConstructor, options?: MomentOptions) {
   };
 
   const momentDatetime = momentFilter('YYYY-MM-DD HH:mm');
-  defineProperty(_vue.prototype, '$momentDatetime', {
-    get() {
-      return momentDatetime;
-    },
-  });
-  _vue.filter('moment_datetime', momentDatetime);
-
   const momentDatetimeWithSeconds = momentFilter('YYYY-MM-DD HH:mm:ss');
-  defineProperty(_vue.prototype, '$momentDatetimeWithSeconds', {
-    get() {
-      return momentDatetimeWithSeconds;
-    },
-  });
-  _vue.filter('moment_datetime_with_seconds', momentDatetimeWithSeconds);
-
   const momentDate = momentFilter('YYYY-MM-DD');
-  defineProperty(_vue.prototype, '$momentDate', {
-    get() {
-      return momentDate;
-    },
-  });
-  _vue.filter('moment_date', momentDate);
-
   const momentTime = momentFilter('HH:mm');
-  defineProperty(_vue.prototype, '$momentTime', {
-    get() {
-      return momentTime;
-    },
-  });
-  _vue.filter('moment_time', momentTime);
-
   const momentTimeWithSeconds = momentFilter('HH:mm:ss');
-  defineProperty(_vue.prototype, '$momentTimeWithSeconds', {
-    get() {
-      return momentTimeWithSeconds;
-    },
-  });
-  _vue.filter('moment_time_with_seconds', momentTimeWithSeconds);
+
+  if (options?.registerGlobal) {
+    defineProperty(_vue.prototype, '$momentDatetime', {
+      get() {
+        return momentDatetime;
+      },
+    });
+
+    defineProperty(_vue.prototype, '$momentDatetimeWithSeconds', {
+      get() {
+        return momentDatetimeWithSeconds;
+      },
+    });
+
+    defineProperty(_vue.prototype, '$momentDate', {
+      get() {
+        return momentDate;
+      },
+    });
+
+    defineProperty(_vue.prototype, '$momentTime', {
+      get() {
+        return momentTime;
+      },
+    });
+
+    defineProperty(_vue.prototype, '$momentTimeWithSeconds', {
+      get() {
+        return momentTimeWithSeconds;
+      },
+    });
+  }
+
+  if (options?.registerFilter ?? true) {
+    _vue.filter('moment_datetime', momentDatetime);
+    _vue.filter('moment_datetime_with_seconds', momentDatetimeWithSeconds);
+    _vue.filter('moment_date', momentDate);
+    _vue.filter('moment_time', momentTime);
+    _vue.filter('moment_time_with_seconds', momentTimeWithSeconds);
+  }
 
   _vue.prototype.$momentToApiISO = toApiISO;
 }

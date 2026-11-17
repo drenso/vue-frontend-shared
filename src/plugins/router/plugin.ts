@@ -31,13 +31,17 @@ export default function install(_vue: VueConstructor, config: RouterConfiguratio
     },
   });
 
-  defineProperty(_vue.prototype, '$sfPath', {
-    get(): PathFunction {
-      return pathFunction;
-    },
-  });
+  if (config.registerGlobal) {
+    defineProperty(_vue.prototype, '$sfPath', {
+      get(): PathFunction {
+        return pathFunction;
+      },
+    });
+  }
 
-  _vue.filter('path', pathFunction);
+  if (config.registerFilter ?? true) {
+    _vue.filter('path', pathFunction);
+  }
 }
 
 declare module 'vue/types/vue' {

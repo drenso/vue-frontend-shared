@@ -6,6 +6,8 @@ import defineProperty = Reflect.defineProperty;
 export interface TranslatorConfiguration {
   messages: MessageObject;
   missingKeyCallback?: MissingTranslationKeyCallback;
+  registerGlobal?: boolean;
+  registerFilter?: boolean;
 }
 
 type TransFunction = (value: any, params?: {}) => string;
@@ -31,13 +33,17 @@ export default function install(_vue: VueConstructor, config: TranslatorConfigur
     },
   });
 
-  defineProperty(_vue.prototype, '$t', {
-    get() {
-      return transFunction;
-    },
-  });
+  if (config.registerGlobal) {
+    defineProperty(_vue.prototype, '$t', {
+      get() {
+        return transFunction;
+      },
+    });
+  }
 
-  _vue.filter('trans', transFunction);
+  if (config.registerFilter ?? true) {
+    _vue.filter('trans', transFunction);
+  }
 }
 
 declare module 'vue/types/vue' {

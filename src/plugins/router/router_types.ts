@@ -33,4 +33,6 @@ export interface RouterInterface {
 export interface RouterConfiguration {
   router: RouterInterface;
   routes: RouterRoutes;
+  registerGlobal?: boolean;
+  registerFilter?: boolean;
 }

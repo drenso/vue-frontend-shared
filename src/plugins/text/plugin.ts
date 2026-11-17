@@ -2,34 +2,44 @@ import {VueConstructor} from 'vue/types/vue';
 import {capitalize, toLowercase, toUppercase, truncate} from './text';
 import defineProperty = Reflect.defineProperty;
 
-export default function install(_vue: VueConstructor) {
-  defineProperty(_vue.prototype, '$lowercase', {
-    get() {
-      return toLowercase;
-    },
-  });
-  _vue.filter('lowercase', toLowercase);
+export interface TextOptions {
+  registerGlobal?: boolean;
+  registerFilter?: boolean;
+}
 
-  defineProperty(_vue.prototype, '$uppercase', {
-    get() {
-      return toUppercase;
-    },
-  });
-  _vue.filter('uppercase', toUppercase);
+export default function install(_vue: VueConstructor, options?: TextOptions) {
+  if (options?.registerGlobal) {
+    defineProperty(_vue.prototype, '$lowercase', {
+      get() {
+        return toLowercase;
+      },
+    });
 
-  defineProperty(_vue.prototype, '$capitalize', {
-    get() {
-      return capitalize;
-    },
-  });
-  _vue.filter('capitalize', capitalize);
+    defineProperty(_vue.prototype, '$uppercase', {
+      get() {
+        return toUppercase;
+      },
+    });
 
-  defineProperty(_vue.prototype, '$truncate', {
-    get() {
-      return truncate;
-    },
-  });
-  _vue.filter('truncate', truncate);
+    defineProperty(_vue.prototype, '$capitalize', {
+      get() {
+        return capitalize;
+      },
+    });
+
+    defineProperty(_vue.prototype, '$truncate', {
+      get() {
+        return truncate;
+      },
+    });
+  }
+
+  if (options?.registerFilter ?? true) {
+    _vue.filter('lowercase', toLowercase);
+    _vue.filter('uppercase', toUppercase);
+    _vue.filter('capitalize', capitalize);
+    _vue.filter('truncate', truncate);
+  }
 }
 
 declare module 'vue/types/vue' {

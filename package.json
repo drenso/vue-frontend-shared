@@ -39,8 +39,7 @@
     "uuid": "^14.0.0",
     "vee-validate": "^3.2",
     "vue": "^2.6",
-    "vue-class-component": "^7.2",
-    "vue-moment": "^4.1"
+    "vue-class-component": "^7.2"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

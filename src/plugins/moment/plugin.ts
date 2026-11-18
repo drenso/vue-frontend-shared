@@ -1,6 +1,4 @@
 import moment, {Moment} from 'moment-timezone';
-// @ts-ignore
-import VueMoment from 'vue-moment';
 import {VueConstructor} from 'vue/types/vue';
 import {toApiISO} from './moment';
 import defineProperty = Reflect.defineProperty;
@@ -23,8 +21,10 @@ export default function install(_vue: VueConstructor, options?: MomentOptions) {
     }
   }
 
-  _vue.use(VueMoment, {
-    moment,
+  defineProperty(_vue.prototype, '$moment', {
+    get() {
+      return moment;
+    },
   });
 
   const momentFilter = (defaultFormat: string): MomentFunction => {
@@ -76,6 +76,7 @@ export default function install(_vue: VueConstructor, options?: MomentOptions) {
   }
 
   if (!options || options.registerFilter !== false) {
+    _vue.filter('moment', momentFilter);
     _vue.filter('moment_datetime', momentDatetime);
     _vue.filter('moment_datetime_with_seconds', momentDatetimeWithSeconds);
     _vue.filter('moment_date', momentDate);
